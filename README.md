@@ -8,12 +8,27 @@ A parcel-sorting conveyor built on three ESP32 boards and a live web dashboard. 
 
 ```mermaid
 flowchart LR
-    CAM["ESP32-CAM<br/>QR reader"] -- "ESP-NOW: zone name" --> S3["ESP32-S3<br/>belt, screen, LEDs, buzzer"]
-    CAM -- "ESP-NOW: zone name" --> SERVO["ESP32<br/>sorting servos"]
-    S3 -- "ESP-NOW: E-stop, resets" --> SERVO
-    S3 <-- "HTTP: zones, QR text, E-stop" --> WEB["Website<br/>React and Express"]
-    CAM -- "HTTP: status, pictures" --> WEB
+    CAM["ESP32-CAM<br/>QR reader"]
+    S3["ESP32-S3<br/>Main controller"]
+    SERVO["ESP32<br/>Sorting servos"]
+    WEB["Website<br/>React and Express"]
+
+    CAM -->|ESP-NOW| S3
+    CAM -->|ESP-NOW| SERVO
+    S3 -->|ESP-NOW| SERVO
+    S3 <-->|HTTP| WEB
+    CAM -->|HTTP| WEB
 ```
+
+| From | To | Link | Carries |
+|---|---|---|---|
+| Camera | S3 and servo board | ESP-NOW | The zone name from each QR code |
+| Camera | S3 | ESP-NOW | "QR read" and "pause the belt" signals |
+| S3 | Servo board | ESP-NOW | E-stop, resume and zone resets |
+| S3 | Website | HTTP | Zone levels and QR text |
+| Website | S3 | HTTP | E-stop and zone resets |
+| Camera | Website | HTTP | Scanner status, and pictures while the page is open |
+| Website | Camera | HTTP | Flash, exposure and gain |
 
 - **Scanning:** the camera decodes QR codes without stopping the belt. If it can see a code but can't read it, it sharpens the picture and tries again, then asks the S3 to pause the belt for up to 3 seconds.
 - **Zones:** each read adds to that zone's count, shown on the S3's screen and the website, up to a limit of 3.
