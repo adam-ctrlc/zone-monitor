@@ -1,0 +1,5 @@
+-std=gnu17
+-Istubs
+-I../../zone_monitor
+-isysroot
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk

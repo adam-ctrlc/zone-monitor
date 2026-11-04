@@ -1,0 +1,16 @@
+# Private settings
+zone_monitor/secrets.h
+zone_cam/secrets.h
+.env
+
+# Generated for each computer by tools/make_compile_commands.py
+compile_commands.json
+
+# Build output and dependencies
+node_modules/
+dist/
+build/
+web/data/
+
+.DS_Store
+*.log

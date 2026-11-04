@@ -1,0 +1,30 @@
+# Settings for the editor only. The real builds use arduino-cli and the ESP32
+# compiler. clang cannot build for this chip, so it is asked to check the code
+# as a similar 32-bit target, without the chip-specific options.
+If:
+  PathExclude: tests/.*
+CompileFlags:
+  Add:
+    - --target=armv7-none-eabi
+    - -Wno-everything
+    - -D__XTENSA__=1
+    - -D__XTENSA_WINDOWED_ABI__=1
+  Remove:
+    - -mlongcalls
+    - -mdisable-hardware-atomics
+    - -mfix-esp32-psram-cache-issue
+    - -mfix-esp32-psram-cache-strategy=*
+    - -mtext-section-literals
+    - -fno-tree-switch-conversion
+    - -fstrict-volatile-bitfields
+    - -freorder-blocks
+    - -free
+    - -fipa-pta
+    - -fno-shrink-wrap
+    - -fno-jump-tables
+    - -MMD
+    - -c
+Diagnostics:
+  UnusedIncludes: None
+  # The toolchain's tgmath.h is written for gcc. The real compiler accepts it.
+  Suppress: [typecheck_choose_expr_requires_constant]
