@@ -6,19 +6,7 @@ A parcel-sorting conveyor built on three ESP32 boards and a live web dashboard. 
 
 ## How it works
 
-```mermaid
-flowchart LR
-    CAM["ESP32-CAM<br/>QR reader"]
-    S3["ESP32-S3<br/>Main controller"]
-    SERVO["ESP32<br/>Sorting servos"]
-    WEB["Website<br/>React and Express"]
-
-    CAM -->|ESP-NOW| S3
-    CAM -->|ESP-NOW| SERVO
-    S3 -->|ESP-NOW| SERVO
-    S3 <-->|HTTP| WEB
-    CAM -->|HTTP| WEB
-```
+![System diagram: the camera and S3 talk to the boards over ESP-NOW and to the website over HTTP](docs/architecture.svg)
 
 | From | To | Link | Carries |
 |---|---|---|---|
